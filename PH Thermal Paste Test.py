@@ -6,7 +6,7 @@ import sys
 URL_BASE = "http://" + "fowx-el" + ".local:4030/"
 s = Session()
 j = {"commands": [
-"M104 S470",
+"M104 S400",
 "M140 S120",
 "M141 S80",
 ]}
