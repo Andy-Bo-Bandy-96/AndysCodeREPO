@@ -1,0 +1,45 @@
+MPs connected: (4,)
+cycles done: 0
+"materialPod": 4
+filament reached PX home
+to printhead finished
+-- special safe nozzle load 2 beginning --
+feed {'distance': 17}
+extrude G1 F115 E20
+feed {'distance': 14}
+0.07711289077997208
+extrude G1 F115 E20
+feed {'distance': 14}
+0.15422578155994415
+extrude G1 F115 E20
+feed {'distance': 14}
+0.23133867979049683
+extrude G1 F115 E20
+feed {'distance': 14}
+0.3084515631198883
+extrude G1 F115 E20
+feed {'distance': 14}
+0.3855644464492798
+extrude G1 F115 E20
+feed {'distance': 14}
+0.46267735958099365
+extrude G1 F115 E20
+feed {'distance': 14}
+0.5397902131080627
+extrude G1 F115 E20
+feed {'distance': 14}
+0.6169031262397766
+extrude G1 F115 E20
+feed {'distance': 14}
+0.6940160393714905
+extrude G1 F115 E20
+feed {'distance': 14}
+0.7711288928985596
+extrude G1 F115 E20
+feed {'distance': 14}
+0.8482418060302734
+extrude G1 F115 E20
+feed {'distance': 14}
+0.9253547191619873
+
+NozzleLoadFailure
