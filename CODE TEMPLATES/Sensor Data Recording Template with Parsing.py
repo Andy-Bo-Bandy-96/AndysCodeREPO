@@ -9,7 +9,8 @@ from datetime import datetime
 url = "http://test-ela.local:4030/vanguard/envSensor/0" #This example address is for a Material Pod attached to Test ELA in slot zero, and it is grabbing the enviromental sensor data
 
 
-# CSV file path to write data. PLEASE REPLACE WITH THE FILE PATH TO THE LOCATION OF CSV FILE YOU WANT TO WRITE TO. NOTE YOU WILL NEED TO CREATE THE CSV FILE IF IT DOESNT ALREADY EXIST
+# CSV file path to write data. PLEASE REPLACE WITH THE FILE PATH TO THE LOCATION WHERE YOU WANT TO CSV TO SAVE, BUT ALSO WRITE THE NAME.CSV OF THE FILE YOU WANT THE SCRIPT TO CREATE. 
+# In this example the script would create a csv file called Humid_data.csv and would write it to a folder on my desktop 
 csv_file = r"C:\Users\Andre\OneDrive\Desktop\Material Pod Testing Scripts\Mositure Testing Script\Humid rig test\Humid_data.csv"
 
 
