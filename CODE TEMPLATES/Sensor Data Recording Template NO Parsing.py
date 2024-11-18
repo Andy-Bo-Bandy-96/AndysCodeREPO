@@ -16,7 +16,7 @@ csv_file = r"C:\Users\andre\OneDrive\Desktop\Dell Desktop\Test.csv"
 def get_sensor_data_and_write_to_csv():
     try:
         
-        response = requests.get(url)
+        response = requests.get(url)    
         
         # Check if the request was successful
         if response.status_code == 200:
