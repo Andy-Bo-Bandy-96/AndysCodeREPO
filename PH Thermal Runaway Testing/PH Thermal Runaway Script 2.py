@@ -13,20 +13,38 @@ T = {"commands": [
 "M104 S490",
 "M140 S120",
 "M141 S80",
-"M141 S80",
+"G28 X Y Z",
 ]}
 j = {"commands": [
-"",
-"",
-"",
+"G1 X176 Y176 E1 F3000",
+"G1 X175 Y176 E1 F3000",
+"G1 X176 Y175 E1 F3000",
+"G1 X174 Y174 E1 F3000",
+"G1 X175 Y175 E1 F3000",
+"G1 X176 Y176 E1 F3000",
+"G1 X175 Y176 E1 F3000",
+"G1 X176 Y175 E1 F3000",
+"G1 X174 Y174 E1 F3000",
+"G1 X175 Y175 E1 F3000",
+"G1 X176 Y176 E1 F3000",
+"G1 X175 Y176 E1 F3000",
+"G1 X176 Y175 E1 F3000",
+"G1 X174 Y174 E1 F3000",
+"G1 X175 Y175 E1 F3000",
+"G1 X176 Y176 E1 F3000",
+"G1 X175 Y176 E1 F3000",
+"G1 X176 Y175 E1 F3000",
+"G1 X174 Y174 E1 F3000",
+"G1 X175 Y175 E1 F3000",
+"G1 E10 F150"
 ]}
 
 def main():
     streamFromGcode(T)
-    for i in range(12600): ## i is the number of cycles this script will run. So for example this script runs 120 times 
+    for i in range(210): ## i is the number of cycles this script will run. So for example this script runs 120 times 
         print(i)
         streamFromGcode(j)
-        time.sleep(1) #This value is critical. This sets how often the script will re-send the G-code command 
+        time.sleep(60) #This value is critical. This sets how often the script will re-send the G-code command 
         ## This value needs to match the length of time it takes to run through all the lines of G-Code found in j. This might need to be timed manually
         ## For the first time to set the value correctly. It is currently set to 60, for a script that take 60 Seconds to run 
 
