@@ -11,6 +11,8 @@ s = Session()
 ##Replace the g-code inside the brackets with what you hope to run. Please note each line of G-code must be between " " with a , at the end of every line
 T = {"commands": [
 "M104 S490",
+"M140 S5",
+"M141 S5",
 "G28 ;",
 ]}
 j = {"commands": [

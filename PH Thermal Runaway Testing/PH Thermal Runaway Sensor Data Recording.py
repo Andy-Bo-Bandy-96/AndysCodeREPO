@@ -11,7 +11,7 @@ url = "http://fowx-el.local:4030/state" #This example address is for a Material 
 
 # CSV file path to write data. PLEASE REPLACE WITH THE FILE PATH TO THE LOCATION WHERE YOU WANT TO CSV TO SAVE, BUT ALSO WRITE THE NAME.CSV OF THE FILE YOU WANT THE SCRIPT TO CREATE. 
 # In this example the script would create a csv file called Humid_data.csv and would write it to a folder on my desktop 
-csv_file = r"C:\Users\andre\OneDrive\Desktop\GitHub Code\AndysCodeREPO\PH Thermal Runaway Testing\Sensor Data Log\ThermalRunawaySensorLog7.csv"
+csv_file = r"C:\Users\andre\OneDrive\Desktop\GitHub Code\AndysCodeREPO\PH Thermal Runaway Testing\Sensor Data Log\ThermalRunawaySensorLog9.csv"
 
 
 def get_sensor_data_and_write_to_csv():
