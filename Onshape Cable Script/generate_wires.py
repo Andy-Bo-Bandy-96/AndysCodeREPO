@@ -159,10 +159,10 @@ for index, row in final_df.iterrows():
                 param['message']['defaultValue'] = mapped_conn_a
             elif p_id == 'List_3u8KU5jBjgEs71':
                 param['message']['defaultValue'] = mapped_conn_b
-        cfg_data['currentConfiguration'] = [] # Ensure defaults take over
+        cfg_data['currentConfiguration'] = [] 
         api_request('POST', asm_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=cfg_data)
 
-    # --- D. Update PART STUDIO Schema Defaults (Fixes the Part Studio Tab) ---
+    # --- D. Update PART STUDIO Schema Defaults ---
     write_log(">> STEP 4: Patching Part Studio Default Configuration...")
     ps_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_ps_id}/configuration"
     r_ps_schema = api_request('GET', ps_cfg_url, auth, headers={"Accept": "application/json"})
@@ -175,18 +175,18 @@ for index, row in final_df.iterrows():
         ps_cfg_data['currentConfiguration'] = []
         api_request('POST', ps_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=ps_cfg_data)
 
-    # --- E. FORCE SERVER GEOMETRY EVALUATION (The Cache Breaker) ---
-    write_log(">> STEP 5: Forcing Server-Side Geometry Flush...")
-    api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}/massproperties", auth, headers={"Accept": "application/json"})
-    api_request('GET', f"{base}/api/partstudios/d/{new_did}/w/{new_wid}/e/{new_ps_id}/massproperties", auth, headers={"Accept": "application/json"})
-
-    # --- F. Push Metadata ---
-    write_log(">> STEP 6: Writing Metadata...")
+    # --- E. Write Metadata ---
+    write_log(">> STEP 5: Writing Metadata...")
     meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
     api_request('POST', meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={"items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]})
     
-    doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}"
-    write_log(f"\n>> FINAL LINK: {doc_url}")
+    # --- F. BUILD DIRECT PARAMETERIZED LINK ---
+    # 🛠️ This forces the browser to explicitly demand the correct shape upon opening, skipping the cached fallback mesh!
+    config_url_string = f"AssyLength={clean_len}+mm;List_ySGuwLBMa9tVMz={mapped_conn_a};List_3u8KU5jBjgEs71={mapped_conn_b}"
+    encoded_config = config_url_string.replace("=", "%3D").replace(";", "%3B")
+    
+    doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}?configuration={encoded_config}"
+    write_log(f"\n>> FINAL HIGH-FIDELITY LINK: {doc_url}")
     
     try:
         with open('generated_drawings.csv', 'a', newline='') as csvfile:
@@ -197,4 +197,3 @@ for index, row in final_df.iterrows():
     time.sleep(1) 
 
 write_log("\n=== ALL PROCESSES FINISHED ===")
-print("\nCheck ONSHAPE_EXECUTION_LOG.txt for complete details.")
