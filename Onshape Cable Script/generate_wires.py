@@ -19,20 +19,13 @@ def write_log(message):
         f.write(log_entry)
 
 def log_api_call(method, url, payload, response):
-    write_log(f"--- API REQUEST ---")
-    write_log(f"METHOD : {method}")
-    write_log(f"URL    : {url}")
-    if payload:
-        write_log(f"PAYLOAD:\n{json.dumps(payload, indent=2)}")
-    else:
-        write_log(f"PAYLOAD: None")
-        
-    write_log(f"--- API RESPONSE ---")
-    write_log(f"STATUS : {response.status_code}")
-    try:
-        write_log(f"BODY   :\n{json.dumps(response.json(), indent=2)}\n")
-    except:
-        write_log(f"BODY   :\n{response.text}\n")
+    if response and response.status_code >= 400:
+        write_log(f"--- API ERROR ({response.status_code}) ---")
+        write_log(f"URL: {url}")
+        try:
+            write_log(f"BODY: {json.dumps(response.json(), indent=2)}\n")
+        except:
+            write_log(f"BODY: {response.text}\n")
 
 def api_request(method, url, auth, headers=None, json_payload=None):
     try:
@@ -42,7 +35,6 @@ def api_request(method, url, auth, headers=None, json_payload=None):
             r = requests.post(url, auth=auth, headers=headers, json=json_payload)
         else:
             raise ValueError(f"Unsupported method: {method}")
-            
         log_api_call(method, url, json_payload, r)
         return r
     except Exception as e:
@@ -140,65 +132,58 @@ for index, row in final_df.iterrows():
     elements_url = f"{base}/api/documents/d/{new_did}/w/{new_wid}/elements"
     r_elems = api_request('GET', elements_url, auth, headers={"Accept": "application/json"})
     
-    new_asm_id, new_dwg_id = None, None
+    new_asm_id, new_ps_id, new_dwg_id = None, None, None
     if r_elems and r_elems.status_code == 200:
         for it in r_elems.json():
             el_type = (it.get('type') or '').lower()
             el_name = (it.get('name') or '').lower()
             if el_type == 'assembly' and 'bom' not in el_name: new_asm_id = it.get('id')
+            elif el_type == 'part studio': new_ps_id = it.get('id')
             elif 'drawing' in el_name or el_type == 'application': new_dwg_id = it.get('id')
 
-    if not new_asm_id:
-        write_log(f"ABORTING {wire_id}: No Assembly found.")
+    if not new_asm_id or not new_ps_id:
+        write_log(f"ABORTING {wire_id}: Missing Assembly or Part Studio.")
         continue
 
-    # --- C. Update ASSEMBLY Configuration DEFAULTS ---
-    write_log(">> STEP 3: Downloading & Injecting DEFAULT Configuration Values...")
+    # --- C. Update ASSEMBLY Schema Defaults ---
+    write_log(">> STEP 3: Patching Assembly Default Configuration...")
     asm_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_asm_id}/configuration"
-    
-    r_get_schema = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
-    if r_get_schema and r_get_schema.status_code == 200:
-        cfg_data = r_get_schema.json()
-        
-        # Sift through and rewrite ONLY the Default Values
+    r_asm_schema = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
+    if r_asm_schema and r_asm_schema.status_code == 200:
+        cfg_data = r_asm_schema.json()
         for param in cfg_data.get('configurationParameters', []):
-            p_msg = param.get('message', {})
-            p_id = p_msg.get('parameterId')
-            
+            p_id = param.get('message', {}).get('parameterId')
             if p_id == 'AssyLength':
-                p_msg['rangeAndDefault']['message']['defaultValue'] = float(clean_len)
-                write_log(f"   --> Patched AssyLength default to: {clean_len}")
+                param['message']['rangeAndDefault']['message']['defaultValue'] = float(clean_len)
             elif p_id == 'List_ySGuwLBMa9tVMz':
-                p_msg['defaultValue'] = mapped_conn_a
-                write_log(f"   --> Patched Connector A default to: {mapped_conn_a}")
+                param['message']['defaultValue'] = mapped_conn_a
             elif p_id == 'List_3u8KU5jBjgEs71':
-                p_msg['defaultValue'] = mapped_conn_b
-                write_log(f"   --> Patched Connector B default to: {mapped_conn_b}")
-
-        # Wipe currentConfiguration just in case, ensuring Defaults govern everything
-        cfg_data['currentConfiguration'] = []
-
-        write_log("Pushing Modified Configuration...")
+                param['message']['defaultValue'] = mapped_conn_b
+        cfg_data['currentConfiguration'] = [] # Ensure defaults take over
         api_request('POST', asm_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=cfg_data)
 
-    # --- D. Push Metadata ---
-    write_log(">> STEP 4: Writing Metadata...")
+    # --- D. Update PART STUDIO Schema Defaults (Fixes the Part Studio Tab) ---
+    write_log(">> STEP 4: Patching Part Studio Default Configuration...")
+    ps_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_ps_id}/configuration"
+    r_ps_schema = api_request('GET', ps_cfg_url, auth, headers={"Accept": "application/json"})
+    if r_ps_schema and r_ps_schema.status_code == 200:
+        ps_cfg_data = r_ps_schema.json()
+        for param in ps_cfg_data.get('configurationParameters', []):
+            p_id = param.get('message', {}).get('parameterId')
+            if p_id == 'WireLength':
+                param['message']['rangeAndDefault']['message']['defaultValue'] = float(clean_len)
+        ps_cfg_data['currentConfiguration'] = []
+        api_request('POST', ps_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=ps_cfg_data)
+
+    # --- E. FORCE SERVER GEOMETRY EVALUATION (The Cache Breaker) ---
+    write_log(">> STEP 5: Forcing Server-Side Geometry Flush...")
+    api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}/massproperties", auth, headers={"Accept": "application/json"})
+    api_request('GET', f"{base}/api/partstudios/d/{new_did}/w/{new_wid}/e/{new_ps_id}/massproperties", auth, headers={"Accept": "application/json"})
+
+    # --- F. Push Metadata ---
+    write_log(">> STEP 6: Writing Metadata...")
     meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
     api_request('POST', meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={"items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]})
-
-    # ==========================================
-    # 5. POST-MORTEM VERIFICATION PHASE
-    # ==========================================
-    write_log("\n>> STEP 5: VERIFICATION OF FINAL OUTPUT FILE...")
-    
-    write_log("  -> CHECK 1: Verifying Assembly Defaults successfully saved")
-    r_check_1 = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
-    
-    write_log("  -> CHECK 2: Verifying Assembly Instances (Did the wire length push down?)")
-    r_check_2 = api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}", auth, headers={"Accept": "application/json"})
-    
-    write_log("  -> CHECK 3: Verifying Assembly Features (Did the connectors suppress?)")
-    r_check_3 = api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}/features", auth, headers={"Accept": "application/json"})
     
     doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}"
     write_log(f"\n>> FINAL LINK: {doc_url}")
