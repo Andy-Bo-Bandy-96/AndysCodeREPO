@@ -1,0 +1,321 @@
+================ ONSHAPE DEEP DIAGNOSTIC REPORT ================
+Document ID: c21f2170721ed64a00272da5
+Workspace ID: 59838e9d8999ffe5a8f8d541
+
+--- ELEMENTS FOUND ---
+Type: part studio     | Name: Dummy Wire Part Studio         | ID: b88fe75b9eabdb177d683c70
+Type: assembly        | Name: Master Assembly                | ID: 00f8809d0fb9de6a9ce3aeb7
+Type: application     | Name: Master 2D Drawing              | ID: e37b165edee1f4ed89ff6f68
+Type: bill of materials | Name: BOM : Master Assembly          | ID: b07dd22aaf3fdcc4d6cdea43
+
+
+--- ASSEMBLY CONFIGURATION (00f8809d0fb9de6a9ce3aeb7) ---
+{
+  "configurationParameters": [
+    {
+      "type": 1826,
+      "typeName": "BTMConfigurationParameterQuantity",
+      "message": {
+        "quantityType": "LENGTH",
+        "rangeAndDefault": {
+          "type": 181,
+          "typeName": "BTQuantityRange",
+          "message": {
+            "units": "millimeter",
+            "minValue": 0.0,
+            "maxValue": 100000.0,
+            "defaultValue": 100.0,
+            "location": {
+              "type": 226,
+              "typeName": "BTLocationInfo",
+              "message": {
+                "document": "",
+                "version": "",
+                "topLevel": "",
+                "parseNodeId": "",
+                "character": 0,
+                "line": 0,
+                "column": 0,
+                "endCharacter": 0,
+                "endLine": 0,
+                "endColumn": 0,
+                "languageVersion": 0,
+                "moduleIds": {
+                  "type": 1897,
+                  "typeName": "BTDocumentVersionElementIds",
+                  "message": {
+                    "documentId": "",
+                    "versionId": "",
+                    "elementId": ""
+                  }
+                },
+                "elementMicroversion": "",
+                "nodeId": "YhlISud24NBlBiZz"
+              }
+            }
+          }
+        },
+        "parameterId": "AssyLength",
+        "parameterName": "AssyLength",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MyoNEWia53lqVJPGw"
+      }
+    },
+    {
+      "type": 105,
+      "typeName": "BTMConfigurationParameterEnum",
+      "message": {
+        "enumName": "List_ySGuwLBMa9tVMz_conf",
+        "options": [
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "None",
+              "optionName": "None",
+              "hasUserCode": false,
+              "nodeId": "MP/zdiqXnFGyayNkC"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "Default",
+              "optionName": "RV2-6Ring",
+              "hasUserCode": false,
+              "nodeId": "MQhPTK+IWinZrH5fu"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "sv1_25_4Fork",
+              "optionName": "sv1.25-4Fork",
+              "hasUserCode": false,
+              "nodeId": "MY1dBqWMQH8tsvXFW"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "_4_8Spade",
+              "optionName": "4.8Spade",
+              "hasUserCode": false,
+              "nodeId": "Mchz8Bxbm9l4TQaxN"
+            }
+          }
+        ],
+        "namespace": "",
+        "defaultValue": "None",
+        "enumOptionVisibilityConditions": {
+          "type": 2936,
+          "typeName": "BTEnumOptionVisibilityConditionList",
+          "message": {
+            "visibilityConditions": []
+          }
+        },
+        "parameterId": "List_ySGuwLBMa9tVMz",
+        "parameterName": "Connector A",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MqKs0wjayJophJO8C"
+      }
+    },
+    {
+      "type": 105,
+      "typeName": "BTMConfigurationParameterEnum",
+      "message": {
+        "enumName": "List_3u8KU5jBjgEs71_conf",
+        "options": [
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "Default",
+              "optionName": "RV2-6Ring",
+              "hasUserCode": false,
+              "nodeId": "M3U3/OJuWm+Y/bIxP"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "sv1_25_4Fork",
+              "optionName": "sv1.25-4Fork",
+              "hasUserCode": false,
+              "nodeId": "MggKTP4fukvxS1HqH"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "_4_8Spade",
+              "optionName": "4.8Spade",
+              "hasUserCode": false,
+              "nodeId": "MaOLTX8uIyc5YRgmz"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "None",
+              "optionName": "None",
+              "hasUserCode": false,
+              "nodeId": "MSpQB9itbQ7aouWEA"
+            }
+          }
+        ],
+        "namespace": "",
+        "defaultValue": "Default",
+        "enumOptionVisibilityConditions": {
+          "type": 2936,
+          "typeName": "BTEnumOptionVisibilityConditionList",
+          "message": {
+            "visibilityConditions": []
+          }
+        },
+        "parameterId": "List_3u8KU5jBjgEs71",
+        "parameterName": "Connector B",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "M7R2N8JExu1rlurFA"
+      }
+    }
+  ],
+  "currentConfiguration": [],
+  "serializationVersion": "1.2.20",
+  "sourceMicroversion": "82210568145997ba7f6d7db5",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 2985
+}
+
+--- ASSEMBLY DEFINITION (Instances & References) ---
+{
+  "instances": []
+}
+
+
+--- PART STUDIO CONFIGURATION (b88fe75b9eabdb177d683c70) ---
+{
+  "configurationParameters": [
+    {
+      "type": 1826,
+      "typeName": "BTMConfigurationParameterQuantity",
+      "message": {
+        "quantityType": "LENGTH",
+        "rangeAndDefault": {
+          "type": 181,
+          "typeName": "BTQuantityRange",
+          "message": {
+            "units": "millimeter",
+            "minValue": 0.0,
+            "maxValue": 100000.0,
+            "defaultValue": 100.0,
+            "location": {
+              "type": 226,
+              "typeName": "BTLocationInfo",
+              "message": {
+                "document": "",
+                "version": "",
+                "topLevel": "",
+                "parseNodeId": "",
+                "character": 0,
+                "line": 0,
+                "column": 0,
+                "endCharacter": 0,
+                "endLine": 0,
+                "endColumn": 0,
+                "languageVersion": 0,
+                "moduleIds": {
+                  "type": 1897,
+                  "typeName": "BTDocumentVersionElementIds",
+                  "message": {
+                    "documentId": "",
+                    "versionId": "",
+                    "elementId": ""
+                  }
+                },
+                "elementMicroversion": "",
+                "nodeId": "uc2e6hLo/amqGJH8"
+              }
+            }
+          }
+        },
+        "parameterId": "WireLength",
+        "parameterName": "WireLength",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MFt21zIlktN8Ap64r"
+      }
+    }
+  ],
+  "currentConfiguration": [
+    {
+      "type": 147,
+      "typeName": "BTMParameterQuantity",
+      "message": {
+        "units": "millimeter",
+        "value": 100.0,
+        "expression": "100 mm",
+        "isInteger": false,
+        "parameterId": "WireLength",
+        "libraryRelationType": "NONE",
+        "parameterName": "",
+        "hasUserCode": false,
+        "nodeId": "Mx22MQuVxvPRO4zDT"
+      }
+    }
+  ],
+  "serializationVersion": "1.2.19",
+  "sourceMicroversion": "5cd0c3b1407a2d765b8ea289",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 2985
+}
+
+--- PART STUDIO FEATURES (Geometry & Suppression Rules) ---
+[
+  {
+    "name": "WireLength",
+    "type": "newSketch",
+    "suppressed": false
+  },
+  {
+    "name": "WireDiameter",
+    "type": "newSketch",
+    "suppressed": false
+  },
+  {
+    "name": "Sweep 1",
+    "type": "sweep",
+    "suppressed": false
+  }
+]
