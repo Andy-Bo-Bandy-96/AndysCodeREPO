@@ -44,7 +44,7 @@ def map_connector(csv_val):
     if 'sv1' in val or 'fork' in val: return "sv1_25_4Fork"
     if '4.8' in val or 'spade' in val: return "_4_8Spade"
     if 'rv2-6' in val or 'ring' in val: return "Default"
-    return "None"  # <--- Our safety catch-all!
+    return "None"
 
 print(f"Successfully matched {len(final_df)} cables! Starting automation...\n" + "-"*50)
 
@@ -65,11 +65,9 @@ for index, row in final_df.iterrows():
     else:
         clean_len = raw_length.lower().replace('mm', '').strip()
 
-    # Translate Connectors
+    # Translate Connectors using our known secret IDs
     mapped_conn_a = map_connector(conn_a)
     mapped_conn_b = map_connector(conn_b)
-
-    print(f"  [DEBUG] Translated Inputs -> Length: {clean_len}mm, ConnA: {mapped_conn_a}, ConnB: {mapped_conn_b}")
 
     # --- A. Copy Document ---
     copy_url = f"{base}/api/documents/{TEMPLATE_DID}/workspaces/{TEMPLATE_WID}/copy"
@@ -86,7 +84,7 @@ for index, row in final_df.iterrows():
     new_did = copy_data.get('newDocumentId')
     new_wid = copy_data.get('newWorkspaceId')
 
-    # Get Elements
+    # Get Element IDs
     elements_url = f"{base}/api/documents/d/{new_did}/w/{new_wid}/elements"
     new_asm_id, new_dwg_id = None, None
     try:
@@ -105,15 +103,60 @@ for index, row in final_df.iterrows():
         print("  ⚠️ Could not find assembly in copied document.")
         continue
 
-    # --- B. Update ASSEMBLY Configuration (Drives EVERYTHING) ---
-    asm_cfg_str = f"AssyLength={clean_len}+mm;List_ySGuwLBMa9tVMz={mapped_conn_a};List_3u8KU5jBjgEs71={mapped_conn_b}"
+    # --- B. Update ASSEMBLY Configuration (SAFELY!) ---
     asm_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_asm_id}/configuration"
     try:
-        r = requests.post(asm_cfg_url, auth=auth, headers={"Content-Type": "application/json"}, json={"configuration": asm_cfg_str})
-        if r.status_code == 200:
-            print(f"  ✅ Assembly configured successfully!")
+        # STEP 1: DOWNLOAD existing schema so we don't delete it
+        r_get = requests.get(asm_cfg_url, auth=auth, headers={"Accept": "application/json"})
+        cfg_data = r_get.json()
+        
+        # Safely find the parameter IDs just in case they change
+        param_ids = {}
+        for p in cfg_data.get('configurationParameters', []):
+            p_msg = p.get('message', {})
+            p_name = p_msg.get('parameterName', '').lower()
+            param_ids[p_name] = p_msg.get('parameterId')
+        
+        len_id = param_ids.get('assylength', 'AssyLength')
+        conn_a_id = param_ids.get('connector a', 'List_ySGuwLBMa9tVMz')
+        conn_b_id = param_ids.get('connector b', 'List_3u8KU5jBjgEs71')
+
+        # STEP 2: BUILD the new active variables using proper Onshape BTM classes
+        new_active_config = [
+            {
+                "type": 147,
+                "typeName": "BTMParameterQuantity",
+                "message": {
+                    "parameterId": len_id,
+                    "expression": f"{clean_len} mm"
+                }
+            },
+            {
+                "type": 145,
+                "typeName": "BTMParameterEnum",
+                "message": {
+                    "parameterId": conn_a_id,
+                    "value": mapped_conn_a
+                }
+            },
+            {
+                "type": 145,
+                "typeName": "BTMParameterEnum",
+                "message": {
+                    "parameterId": conn_b_id,
+                    "value": mapped_conn_b
+                }
+            }
+        ]
+        
+        # STEP 3: INJECT and UPLOAD back to Onshape
+        cfg_data['currentConfiguration'] = new_active_config
+        
+        r_post = requests.post(asm_cfg_url, auth=auth, headers={"Content-Type": "application/json"}, json=cfg_data)
+        if r_post.status_code == 200:
+            print(f"  ✅ Assembly configured successfully (Schema Preserved!)")
         else:
-            print(f"  ⚠️ Assembly config returned status: {r.status_code}")
+            print(f"  ⚠️ Assembly config returned status: {r_post.status_code}")
     except Exception as e:
         print(f"  ⚠️ Assembly config failed: {e}")
 

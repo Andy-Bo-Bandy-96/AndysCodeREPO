@@ -1,0 +1,137 @@
+================ BROKEN FILE FORENSIC REPORT ================
+Document ID: fc1441952898a249e924f974
+Workspace ID: b18dd9de5d6d06df5e03dc55
+
+--- ELEMENTS FOUND IN BROKEN FILE ---
+Type: part studio     | Name: Dummy Wire Part Studio         | ID: 168c548a53a019510efd4083
+Type: assembly        | Name: Master Assembly                | ID: 2149469f348284fa49075423
+Type: application     | Name: Master 2D Drawing              | ID: 7ed4c81ea82c7765047a5f42
+Type: bill of materials | Name: BOM : Master Assembly          | ID: 1ec9ce9d85b448277317d06c
+
+
+--- 1. ASSEMBLY CONFIGURATION STATE (2149469f348284fa49075423) ---
+{
+  "configurationParameters": [],
+  "currentConfiguration": [],
+  "serializationVersion": "1.2.20",
+  "sourceMicroversion": "6536903aff181d5fd555f4bf",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 2985
+}
+
+--- 2. ASSEMBLY INSTANCES & SUPPRESSION STATE ---
+[
+  {
+    "id": "MfSv3OrpptXgGLvQu",
+    "name": "BaseWire <1>",
+    "isSuppressed": false,
+    "configuration": "WireLength=0.1+meter"
+  }
+]
+
+
+--- 3. PART STUDIO CONFIGURATION STATE (168c548a53a019510efd4083) ---
+{
+  "configurationParameters": [
+    {
+      "type": 1826,
+      "typeName": "BTMConfigurationParameterQuantity",
+      "message": {
+        "quantityType": "LENGTH",
+        "rangeAndDefault": {
+          "type": 181,
+          "typeName": "BTQuantityRange",
+          "message": {
+            "units": "millimeter",
+            "minValue": 0.0,
+            "maxValue": 100000.0,
+            "defaultValue": 100.0,
+            "location": {
+              "type": 226,
+              "typeName": "BTLocationInfo",
+              "message": {
+                "document": "",
+                "version": "",
+                "topLevel": "",
+                "parseNodeId": "",
+                "character": 0,
+                "line": 0,
+                "column": 0,
+                "endCharacter": 0,
+                "endLine": 0,
+                "endColumn": 0,
+                "languageVersion": 0,
+                "moduleIds": {
+                  "type": 1897,
+                  "typeName": "BTDocumentVersionElementIds",
+                  "message": {
+                    "documentId": "",
+                    "versionId": "",
+                    "elementId": ""
+                  }
+                },
+                "elementMicroversion": "",
+                "nodeId": "uc2e6hLo/amqGJH8"
+              }
+            }
+          }
+        },
+        "parameterId": "WireLength",
+        "parameterName": "WireLength",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MFt21zIlktN8Ap64r"
+      }
+    }
+  ],
+  "currentConfiguration": [
+    {
+      "type": 147,
+      "typeName": "BTMParameterQuantity",
+      "message": {
+        "units": "millimeter",
+        "value": 100.0,
+        "expression": "100 mm",
+        "isInteger": false,
+        "parameterId": "WireLength",
+        "libraryRelationType": "NONE",
+        "parameterName": "",
+        "hasUserCode": false,
+        "nodeId": "Mx22MQuVxvPRO4zDT"
+      }
+    }
+  ],
+  "serializationVersion": "1.2.11",
+  "sourceMicroversion": "e8f94436686690fbf36e8672",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 2985
+}
+
+--- 4. PART STUDIO FEATURES (Why did the wire break?) ---
+[
+  {
+    "name": "WireLength",
+    "type": "newSketch",
+    "suppressed": false,
+    "featureStatus": "UNKNOWN"
+  },
+  {
+    "name": "WireDiameter",
+    "type": "newSketch",
+    "suppressed": false,
+    "featureStatus": "UNKNOWN"
+  },
+  {
+    "name": "Sweep 1",
+    "type": "sweep",
+    "suppressed": false,
+    "featureStatus": "UNKNOWN"
+  }
+]
