@@ -1,0 +1,239 @@
+=== 1. ASSEMBLY CONFIGURATION SCHEMAS ===
+{
+  "configurationParameters": [
+    {
+      "type": 1826,
+      "typeName": "BTMConfigurationParameterQuantity",
+      "message": {
+        "quantityType": "LENGTH",
+        "rangeAndDefault": {
+          "type": 181,
+          "typeName": "BTQuantityRange",
+          "message": {
+            "units": "millimeter",
+            "minValue": 0.0,
+            "maxValue": 100000.0,
+            "defaultValue": 100.0,
+            "location": {
+              "type": 226,
+              "typeName": "BTLocationInfo",
+              "message": {
+                "document": "",
+                "version": "",
+                "topLevel": "",
+                "parseNodeId": "",
+                "character": 0,
+                "line": 0,
+                "column": 0,
+                "endCharacter": 0,
+                "endLine": 0,
+                "endColumn": 0,
+                "languageVersion": 0,
+                "moduleIds": {
+                  "type": 1897,
+                  "typeName": "BTDocumentVersionElementIds",
+                  "message": {
+                    "documentId": "",
+                    "versionId": "",
+                    "elementId": ""
+                  }
+                },
+                "elementMicroversion": "",
+                "nodeId": "YhlISud24NBlBiZz"
+              }
+            }
+          }
+        },
+        "parameterId": "AssyLength",
+        "parameterName": "AssyLength",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MZxk1RjDpVGYPi77I"
+      }
+    },
+    {
+      "type": 105,
+      "typeName": "BTMConfigurationParameterEnum",
+      "message": {
+        "enumName": "List_ySGuwLBMa9tVMz_conf",
+        "options": [
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "None",
+              "optionName": "None",
+              "hasUserCode": false,
+              "nodeId": "M9J4swoidr6gW4ivD"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "Default",
+              "optionName": "RV2-6Ring",
+              "hasUserCode": false,
+              "nodeId": "MktedNGSGkjnCSLwu"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "sv1_25_4Fork",
+              "optionName": "sv1.25-4Fork",
+              "hasUserCode": false,
+              "nodeId": "MAabEY31JLW+czmfr"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "_4_8Spade",
+              "optionName": "4.8Spade",
+              "hasUserCode": false,
+              "nodeId": "MIjMHI8y1cU5GPwRH"
+            }
+          }
+        ],
+        "namespace": "",
+        "defaultValue": "None",
+        "enumOptionVisibilityConditions": {
+          "type": 2936,
+          "typeName": "BTEnumOptionVisibilityConditionList",
+          "message": {
+            "visibilityConditions": []
+          }
+        },
+        "parameterId": "List_ySGuwLBMa9tVMz",
+        "parameterName": "Connector A",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MAZnKhB4Iwy96kFlc"
+      }
+    },
+    {
+      "type": 105,
+      "typeName": "BTMConfigurationParameterEnum",
+      "message": {
+        "enumName": "List_3u8KU5jBjgEs71_conf",
+        "options": [
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "Default",
+              "optionName": "RV2-6Ring",
+              "hasUserCode": false,
+              "nodeId": "MTWAIqeu0Han2Sh+m"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "sv1_25_4Fork",
+              "optionName": "sv1.25-4Fork",
+              "hasUserCode": false,
+              "nodeId": "MS9ybEuziB2OSlGed"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "_4_8Spade",
+              "optionName": "4.8Spade",
+              "hasUserCode": false,
+              "nodeId": "MQZuqXm2qbUafsNWP"
+            }
+          },
+          {
+            "type": 592,
+            "typeName": "BTMEnumOption",
+            "message": {
+              "option": "None",
+              "optionName": "None",
+              "hasUserCode": false,
+              "nodeId": "MGOAe02JVUs64Pi76"
+            }
+          }
+        ],
+        "namespace": "",
+        "defaultValue": "Default",
+        "enumOptionVisibilityConditions": {
+          "type": 2936,
+          "typeName": "BTEnumOptionVisibilityConditionList",
+          "message": {
+            "visibilityConditions": []
+          }
+        },
+        "parameterId": "List_3u8KU5jBjgEs71",
+        "parameterName": "Connector B",
+        "isCosmetic": false,
+        "visibilityCondition": {
+          "type": 177,
+          "typeName": "BTParameterVisibilityCondition",
+          "message": {}
+        },
+        "hasUserCode": false,
+        "nodeId": "MZDya2Vxvibu5PdyO"
+      }
+    }
+  ],
+  "currentConfiguration": [],
+  "serializationVersion": "1.2.20",
+  "sourceMicroversion": "4b7866b153e4b60d849749a7",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 2985
+}
+
+=== 2. ASSEMBLY DEFINITION (INSTANCES) ===
+[
+  {
+    "name": "BaseWire <1>",
+    "configuration": "WireLength=0.1+meter",
+    "isSuppressed": false
+  }
+]
+
+=== 3. ASSEMBLY FEATURES (SUPPRESSION RULES) ===
+[
+  {
+    "name": "Fastened 1",
+    "suppressed": false
+  },
+  {
+    "name": "Fastened 2",
+    "suppressed": false
+  },
+  {
+    "name": "Fastened 3",
+    "suppressed": false
+  },
+  {
+    "name": "Fastened 4",
+    "suppressed": false
+  },
+  {
+    "name": "Fastened 5",
+    "suppressed": false
+  },
+  {
+    "name": "Fastened 6",
+    "suppressed": false
+  }
+]

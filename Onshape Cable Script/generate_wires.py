@@ -3,8 +3,59 @@ import time
 import pandas as pd
 import requests
 import csv
+import json
+from datetime import datetime
 
-# 1. Credentials & IDs
+# ==========================================
+# 1. GLOBAL LOGGING ENGINE
+# ==========================================
+LOG_FILE = "ONSHAPE_EXECUTION_LOG.txt"
+
+def write_log(message):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = f"[{timestamp}] {message}\n"
+    print(log_entry.strip())  
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(log_entry)
+
+def log_api_call(method, url, payload, response):
+    write_log(f"--- API REQUEST ---")
+    write_log(f"METHOD : {method}")
+    write_log(f"URL    : {url}")
+    if payload:
+        write_log(f"PAYLOAD:\n{json.dumps(payload, indent=2)}")
+    else:
+        write_log(f"PAYLOAD: None")
+        
+    write_log(f"--- API RESPONSE ---")
+    write_log(f"STATUS : {response.status_code}")
+    try:
+        write_log(f"BODY   :\n{json.dumps(response.json(), indent=2)}\n")
+    except:
+        write_log(f"BODY   :\n{response.text}\n")
+
+def api_request(method, url, auth, headers=None, json_payload=None):
+    try:
+        if method.upper() == 'GET':
+            r = requests.get(url, auth=auth, headers=headers)
+        elif method.upper() == 'POST':
+            r = requests.post(url, auth=auth, headers=headers, json=json_payload)
+        else:
+            raise ValueError(f"Unsupported method: {method}")
+            
+        log_api_call(method, url, json_payload, r)
+        return r
+    except Exception as e:
+        write_log(f"!!! FATAL NETWORK ERROR !!!\n{e}\n")
+        return None
+
+with open(LOG_FILE, "w", encoding="utf-8") as f:
+    f.write(f"=== ONSHAPE AUTOMATION LOG INITIALIZED AT {datetime.now()} ===\n\n")
+
+# ==========================================
+# 2. CREDENTIALS & IDs
+# ==========================================
+write_log("Loading credentials from environment...")
 url = os.getenv("ONSHAPE_BASE_URL", "https://cad.onshape.com").strip(' "\'\n\r')
 access = os.getenv("ONSHAPE_ACCESS_KEY", "").strip(' "\'\n\r')
 secret = os.getenv("ONSHAPE_SECRET_KEY", "").strip(' "\'\n\r')
@@ -17,11 +68,16 @@ TARGET_FOLDER_ID = "f83018d2440a03d57cf2ced3"
 auth = (access, secret)
 base = url.rstrip('/')
 
-# 2. Data Loading & Sanitization
-print("Loading CSV files...")
-bom_df = pd.read_csv('assembly_bom.csv').fillna('None')
-ps_df = pd.read_csv('part_studio_data.csv').fillna('None')
-ref_df = pd.read_csv('original_reference.csv').fillna('None')
+# ==========================================
+# 3. DATA LOADING
+# ==========================================
+try:
+    bom_df = pd.read_csv('assembly_bom.csv').fillna('None')
+    ps_df = pd.read_csv('part_studio_data.csv').fillna('None')
+    ref_df = pd.read_csv('original_reference.csv').fillna('None')
+except Exception as e:
+    write_log(f"CRITICAL ERROR: Could not load CSV files. {e}")
+    exit()
 
 bom_df.columns = bom_df.columns.str.strip()
 ps_df.columns = ps_df.columns.str.strip()
@@ -38,7 +94,7 @@ ref_df['Connector B'] = ref_df['Connector B'].replace(['nan', 'None', ''], 'None
 merge_1 = pd.merge(ps_df, bom_df, left_on='ID', right_on='Name', how='inner')
 final_df = pd.merge(merge_1, ref_df, left_on='ID', right_on='Wire ID', how='inner')
 
-# --- TRANSLATION DICTIONARY ---
+# EXACT TRANSLATION DICTIONARY
 def map_connector(csv_val):
     val = str(csv_val).strip().lower()
     if 'sv1' in val or 'fork' in val: return "sv1_25_4Fork"
@@ -46,9 +102,9 @@ def map_connector(csv_val):
     if 'rv2-6' in val or 'ring' in val: return "Default"
     return "None"
 
-print(f"Successfully matched {len(final_df)} cables! Starting automation...\n" + "-"*50)
-
-# 3. Loop and Generate
+# ==========================================
+# 4. CORE EXECUTION LOOP
+# ==========================================
 for index, row in final_df.iterrows():
     wire_id = row['Wire ID'] 
     raw_length = str(row['Length']).strip()
@@ -57,132 +113,96 @@ for index, row in final_df.iterrows():
     csv_part_number = str(row['Part number']) 
     
     custom_name = f"{wire_id} - ({conn_a} to {conn_b}) - {csv_part_number} - Cable Assembly"
-    print(f"Processing: {custom_name}...")
+    write_log(f"\n{'='*80}\nPROCESSING WIRE: {wire_id}\n{'='*80}")
     
-    # Extract numeric length
     if not raw_length or raw_length.lower() == 'none' or raw_length == '':
-        clean_len = "150"
+        clean_len = 150.0
     else:
-        clean_len = raw_length.lower().replace('mm', '').strip()
+        clean_len = float(raw_length.lower().replace('mm', '').strip())
 
-    # Translate Connectors using our known secret IDs
     mapped_conn_a = map_connector(conn_a)
     mapped_conn_b = map_connector(conn_b)
 
     # --- A. Copy Document ---
+    write_log(">> STEP 1: Copying Master Template...")
     copy_url = f"{base}/api/documents/{TEMPLATE_DID}/workspaces/{TEMPLATE_WID}/copy"
-    try:
-        r = requests.post(copy_url, auth=auth, headers={"Content-Type": "application/json"}, json={
-            "newName": custom_name, "isPublic": False, "folderId": TARGET_FOLDER_ID
-        })
-        r.raise_for_status()
-        copy_data = r.json()
-    except requests.RequestException as e:
-        print(f"  ❌ Failed to copy template: {e}")
-        continue
+    r_copy = api_request('POST', copy_url, auth, headers={"Content-Type": "application/json"}, json_payload={"newName": custom_name, "isPublic": False, "folderId": TARGET_FOLDER_ID})
     
-    new_did = copy_data.get('newDocumentId')
-    new_wid = copy_data.get('newWorkspaceId')
+    if not r_copy or r_copy.status_code != 200:
+        write_log(f"ABORTING {wire_id}: Failed to copy.")
+        continue
+        
+    new_did = r_copy.json().get('newDocumentId')
+    new_wid = r_copy.json().get('newWorkspaceId')
 
-    # Get Element IDs
+    # --- B. Get Element IDs ---
+    write_log(">> STEP 2: Locating Elements...")
     elements_url = f"{base}/api/documents/d/{new_did}/w/{new_wid}/elements"
+    r_elems = api_request('GET', elements_url, auth, headers={"Accept": "application/json"})
+    
     new_asm_id, new_dwg_id = None, None
-    try:
-        resp = requests.get(elements_url, auth=auth, headers={"Accept": "application/json"})
-        if resp.status_code == 200:
-            for it in resp.json():
-                el_type = (it.get('type') or it.get('elementType') or '').lower()
-                el_name = (it.get('name') or '').lower()
-                el_id = it.get('id')
-                if el_type == 'assembly' and 'bom' not in el_name: new_asm_id = el_id
-                elif 'drawing' in el_name or el_type == 'application': new_dwg_id = el_id
-    except:
-        pass
+    if r_elems and r_elems.status_code == 200:
+        for it in r_elems.json():
+            el_type = (it.get('type') or '').lower()
+            el_name = (it.get('name') or '').lower()
+            if el_type == 'assembly' and 'bom' not in el_name: new_asm_id = it.get('id')
+            elif 'drawing' in el_name or el_type == 'application': new_dwg_id = it.get('id')
 
     if not new_asm_id:
-        print("  ⚠️ Could not find assembly in copied document.")
+        write_log(f"ABORTING {wire_id}: No Assembly found.")
         continue
 
-    # --- B. Update ASSEMBLY Configuration (SAFELY!) ---
+    # --- C. Update ASSEMBLY Configuration DEFAULTS ---
+    write_log(">> STEP 3: Downloading & Injecting DEFAULT Configuration Values...")
     asm_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_asm_id}/configuration"
-    try:
-        # STEP 1: DOWNLOAD existing schema so we don't delete it
-        r_get = requests.get(asm_cfg_url, auth=auth, headers={"Accept": "application/json"})
-        cfg_data = r_get.json()
+    
+    r_get_schema = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
+    if r_get_schema and r_get_schema.status_code == 200:
+        cfg_data = r_get_schema.json()
         
-        # Safely find the parameter IDs just in case they change
-        param_ids = {}
-        for p in cfg_data.get('configurationParameters', []):
-            p_msg = p.get('message', {})
-            p_name = p_msg.get('parameterName', '').lower()
-            param_ids[p_name] = p_msg.get('parameterId')
-        
-        len_id = param_ids.get('assylength', 'AssyLength')
-        conn_a_id = param_ids.get('connector a', 'List_ySGuwLBMa9tVMz')
-        conn_b_id = param_ids.get('connector b', 'List_3u8KU5jBjgEs71')
+        # Sift through and rewrite ONLY the Default Values
+        for param in cfg_data.get('configurationParameters', []):
+            p_msg = param.get('message', {})
+            p_id = p_msg.get('parameterId')
+            
+            if p_id == 'AssyLength':
+                p_msg['rangeAndDefault']['message']['defaultValue'] = float(clean_len)
+                write_log(f"   --> Patched AssyLength default to: {clean_len}")
+            elif p_id == 'List_ySGuwLBMa9tVMz':
+                p_msg['defaultValue'] = mapped_conn_a
+                write_log(f"   --> Patched Connector A default to: {mapped_conn_a}")
+            elif p_id == 'List_3u8KU5jBjgEs71':
+                p_msg['defaultValue'] = mapped_conn_b
+                write_log(f"   --> Patched Connector B default to: {mapped_conn_b}")
 
-        # STEP 2: BUILD the new active variables using proper Onshape BTM classes
-        new_active_config = [
-            {
-                "type": 147,
-                "typeName": "BTMParameterQuantity",
-                "message": {
-                    "parameterId": len_id,
-                    "expression": f"{clean_len} mm"
-                }
-            },
-            {
-                "type": 145,
-                "typeName": "BTMParameterEnum",
-                "message": {
-                    "parameterId": conn_a_id,
-                    "value": mapped_conn_a
-                }
-            },
-            {
-                "type": 145,
-                "typeName": "BTMParameterEnum",
-                "message": {
-                    "parameterId": conn_b_id,
-                    "value": mapped_conn_b
-                }
-            }
-        ]
-        
-        # STEP 3: INJECT and UPLOAD back to Onshape
-        cfg_data['currentConfiguration'] = new_active_config
-        
-        r_post = requests.post(asm_cfg_url, auth=auth, headers={"Content-Type": "application/json"}, json=cfg_data)
-        if r_post.status_code == 200:
-            print(f"  ✅ Assembly configured successfully (Schema Preserved!)")
-        else:
-            print(f"  ⚠️ Assembly config returned status: {r_post.status_code}")
-    except Exception as e:
-        print(f"  ⚠️ Assembly config failed: {e}")
+        # Wipe currentConfiguration just in case, ensuring Defaults govern everything
+        cfg_data['currentConfiguration'] = []
 
-    # --- C. Sync Drawing ---
-    if new_dwg_id:
-        sync_url = f"{base}/api/drawings/d/{new_did}/w/{new_wid}/e/{new_dwg_id}/updates"
-        try:
-            requests.post(sync_url, auth=auth, headers={"Content-Type": "application/json"}, json={})
-            print(f"  🔄 Drawing refreshed")
-        except:
-            pass
+        write_log("Pushing Modified Configuration...")
+        api_request('POST', asm_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=cfg_data)
 
     # --- D. Push Metadata ---
+    write_log(">> STEP 4: Writing Metadata...")
     meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
-    try:
-        requests.post(meta_url, auth=auth, headers={"Content-Type": "application/json"}, json={
-            "items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]
-        })
-        print(f"  ✅ Metadata updated")
-    except:
-        pass
+    api_request('POST', meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={"items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]})
 
-    doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}"
-    print(f"  ✅ Finished: {doc_url}\n")
+    # ==========================================
+    # 5. POST-MORTEM VERIFICATION PHASE
+    # ==========================================
+    write_log("\n>> STEP 5: VERIFICATION OF FINAL OUTPUT FILE...")
     
-    # Save to CSV log
+    write_log("  -> CHECK 1: Verifying Assembly Defaults successfully saved")
+    r_check_1 = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
+    
+    write_log("  -> CHECK 2: Verifying Assembly Instances (Did the wire length push down?)")
+    r_check_2 = api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}", auth, headers={"Accept": "application/json"})
+    
+    write_log("  -> CHECK 3: Verifying Assembly Features (Did the connectors suppress?)")
+    r_check_3 = api_request('GET', f"{base}/api/assemblies/d/{new_did}/w/{new_wid}/e/{new_asm_id}/features", auth, headers={"Accept": "application/json"})
+    
+    doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}"
+    write_log(f"\n>> FINAL LINK: {doc_url}")
+    
     try:
         with open('generated_drawings.csv', 'a', newline='') as csvfile:
             csv.writer(csvfile).writerow([wire_id, csv_part_number, new_did, new_wid, new_asm_id, doc_url])
@@ -191,4 +211,5 @@ for index, row in final_df.iterrows():
 
     time.sleep(1) 
 
-print("🎉 All 2D manufacturing drawings generated and filed successfully!")
+write_log("\n=== ALL PROCESSES FINISHED ===")
+print("\nCheck ONSHAPE_EXECUTION_LOG.txt for complete details.")
