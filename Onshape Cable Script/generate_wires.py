@@ -86,12 +86,42 @@ ref_df['Connector B'] = ref_df['Connector B'].replace(['nan', 'None', ''], 'None
 merge_1 = pd.merge(ps_df, bom_df, left_on='ID', right_on='Name', how='inner')
 final_df = pd.merge(merge_1, ref_df, left_on='ID', right_on='Wire ID', how='inner')
 
-# EXACT TRANSLATION DICTIONARY
+# EXACT 14-PART TRANSLATION DICTIONARY
 def map_connector(csv_val):
     val = str(csv_val).strip().lower()
-    if 'sv1' in val or 'fork' in val: return "sv1_25_4Fork"
-    if '4.8' in val or 'spade' in val: return "_4_8Spade"
-    if 'rv2-6' in val or 'ring' in val: return "Default"
+    
+    # 1. Spade Connectors (4.8 vs 6.3)
+    if 'spade' in val:
+        if '6' in val: return "_6Spade"
+        return "_4_8Spade"
+    if '4.8' in val: return "_4_8Spade"
+    if '6.3' in val: return "_6Spade"
+    
+    # 2. XH Series
+    if 'xhp' in val:
+        if '6' in val: return "XHP_6"
+        if '4' in val: return "XHP_4"
+        if '2' in val: return "XHP_2"
+    if 'xha' in val and '4' in val: return "XHA_4"
+    
+    # 3. RJ45
+    if 'rj45' in val or 'rj-45' in val: return "RJ45Male"
+    
+    # 4. KST Series (E1008, E2510, E7508)
+    if 'kst' in val or '1008' in val or '2510' in val or '7508' in val:
+        if '2510' in val: return "KST_E2510"
+        if '7508' in val: return "KST_E7508"
+        return "KST_E1008" # Fallback to 1008
+        
+    # 5. Fork Connectors (SV1 vs SV2)
+    if 'fork' in val or 'sv1' in val or 'sv2' in val:
+        if 'sv2' in val: return "SV2_4Fork"
+        return "sv1_25_4Fork" # Default to standard fork
+        
+    # 6. Ring Connectors
+    if 'ring' in val or 'rv2' in val: return "Default"
+    
+    # 7. Safety Catch-All
     return "None"
 
 # ==========================================
@@ -146,7 +176,7 @@ for index, row in final_df.iterrows():
         continue
 
     # --- C. Update ASSEMBLY Schema Defaults ---
-    write_log(">> STEP 3: Patching Assembly Default Configuration...")
+    write_log(">> STEP 3: Patching Assembly Default Configuration Parameters...")
     asm_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_asm_id}/configuration"
     r_asm_schema = api_request('GET', asm_cfg_url, auth, headers={"Accept": "application/json"})
     if r_asm_schema and r_asm_schema.status_code == 200:
@@ -163,7 +193,7 @@ for index, row in final_df.iterrows():
         api_request('POST', asm_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=cfg_data)
 
     # --- D. Update PART STUDIO Schema Defaults ---
-    write_log(">> STEP 4: Patching Part Studio Default Configuration...")
+    write_log(">> STEP 4: Patching Part Studio Default Configuration Parameters...")
     ps_cfg_url = f"{base}/api/elements/d/{new_did}/w/{new_wid}/e/{new_ps_id}/configuration"
     r_ps_schema = api_request('GET', ps_cfg_url, auth, headers={"Accept": "application/json"})
     if r_ps_schema and r_ps_schema.status_code == 200:
@@ -175,18 +205,37 @@ for index, row in final_df.iterrows():
         ps_cfg_data['currentConfiguration'] = []
         api_request('POST', ps_cfg_url, auth, headers={"Content-Type": "application/json"}, json_payload=ps_cfg_data)
 
-    # --- E. Write Metadata ---
-    write_log(">> STEP 5: Writing Metadata...")
+    # --- E. PROGRAMMATIC DRAWING VIEW REFERENCE OVERWRITE ---
+    if new_dwg_id:
+        write_log(">> STEP 5: Re-linking Drawing Views Locally...")
+        drawing_modify_url = f"{base}/api/drawings/d/{new_did}/w/{new_wid}/e/{new_dwg_id}/modify"
+        
+        drawing_payload = {
+            "viewModifications": [
+                {
+                    "btType": "BTDrawingViewModification-150",
+                    "viewReference": {
+                        "btType": "BTElementReference-120",
+                        "documentId": new_did,
+                        "workspaceId": new_wid,
+                        "elementId": new_asm_id 
+                    }
+                }
+            ]
+        }
+        api_request('POST', drawing_modify_url, auth, headers={"Content-Type": "application/json"}, json_payload=drawing_payload)
+
+    # --- F. Write Properties Metadata ---
+    write_log(">> STEP 6: Writing Metadata Properties...")
     meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
     api_request('POST', meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={"items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]})
     
-    # --- F. BUILD DIRECT PARAMETERIZED LINK ---
-    # 🛠️ This forces the browser to explicitly demand the correct shape upon opening, skipping the cached fallback mesh!
+    # --- G. Build Direct Parameterized View URL ---
     config_url_string = f"AssyLength={clean_len}+mm;List_ySGuwLBMa9tVMz={mapped_conn_a};List_3u8KU5jBjgEs71={mapped_conn_b}"
     encoded_config = config_url_string.replace("=", "%3D").replace(";", "%3B")
     
     doc_url = f"{base}/documents/{new_did}/w/{new_wid}/e/{new_asm_id}?configuration={encoded_config}"
-    write_log(f"\n>> FINAL HIGH-FIDELITY LINK: {doc_url}")
+    write_log(f"\n>> FINAL LINK: {doc_url}")
     
     try:
         with open('generated_drawings.csv', 'a', newline='') as csvfile:
@@ -196,4 +245,4 @@ for index, row in final_df.iterrows():
 
     time.sleep(1) 
 
-write_log("\n=== ALL PROCESSES FINISHED ===")
+write_log("\n=== ALL PROCESSES FINISHED PERFECTLY ===")

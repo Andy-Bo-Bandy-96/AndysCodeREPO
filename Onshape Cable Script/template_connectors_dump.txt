@@ -1,0 +1,393 @@
+[
+  {
+    "type": 1826,
+    "typeName": "BTMConfigurationParameterQuantity",
+    "message": {
+      "quantityType": "LENGTH",
+      "rangeAndDefault": {
+        "type": 181,
+        "typeName": "BTQuantityRange",
+        "message": {
+          "units": "millimeter",
+          "minValue": 0.0,
+          "maxValue": 100000.0,
+          "defaultValue": 100.0,
+          "location": {
+            "type": 226,
+            "typeName": "BTLocationInfo",
+            "message": {
+              "document": "",
+              "version": "",
+              "topLevel": "",
+              "parseNodeId": "",
+              "character": 0,
+              "line": 0,
+              "column": 0,
+              "endCharacter": 0,
+              "endLine": 0,
+              "endColumn": 0,
+              "languageVersion": 0,
+              "moduleIds": {
+                "type": 1897,
+                "typeName": "BTDocumentVersionElementIds",
+                "message": {
+                  "documentId": "",
+                  "versionId": "",
+                  "elementId": ""
+                }
+              },
+              "elementMicroversion": "",
+              "nodeId": "YhlISud24NBlBiZz"
+            }
+          }
+        }
+      },
+      "parameterId": "AssyLength",
+      "parameterName": "AssyLength",
+      "isCosmetic": false,
+      "visibilityCondition": {
+        "type": 177,
+        "typeName": "BTParameterVisibilityCondition",
+        "message": {}
+      },
+      "hasUserCode": false,
+      "nodeId": "MyoNEWia53lqVJPGw"
+    }
+  },
+  {
+    "type": 105,
+    "typeName": "BTMConfigurationParameterEnum",
+    "message": {
+      "enumName": "List_ySGuwLBMa9tVMz_conf",
+      "options": [
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "None",
+            "optionName": "None",
+            "hasUserCode": false,
+            "nodeId": "MP/zdiqXnFGyayNkC"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Default",
+            "optionName": "RV2-6Ring",
+            "hasUserCode": false,
+            "nodeId": "MQhPTK+IWinZrH5fu"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "sv1_25_4Fork",
+            "optionName": "sv1.25-4Fork",
+            "hasUserCode": false,
+            "nodeId": "MY1dBqWMQH8tsvXFW"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_4_8Spade",
+            "optionName": "4.8Spade",
+            "hasUserCode": false,
+            "nodeId": "Mchz8Bxbm9l4TQaxN"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_6",
+            "optionName": "XHP-6",
+            "hasUserCode": false,
+            "nodeId": "MReu388rHaFFYM0RF"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_4",
+            "optionName": "XHP-4",
+            "hasUserCode": false,
+            "nodeId": "M2FM+/qPTDXDTrFsC"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_2",
+            "optionName": "XHP-2",
+            "hasUserCode": false,
+            "nodeId": "M1cTOfqZ1jCcx1Oaf"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST_E1008",
+            "optionName": "KST E1008",
+            "hasUserCode": false,
+            "nodeId": "MkVBhoXawiWlSq9dy"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "RJ45Male",
+            "optionName": "RJ45Male",
+            "hasUserCode": false,
+            "nodeId": "MmdRRab0iWH6lfuOm"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHA_4",
+            "optionName": "XHA-4",
+            "hasUserCode": false,
+            "nodeId": "Mu8l8fzzyLYuU3P4u"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_6Spade",
+            "optionName": "6.3Spade",
+            "hasUserCode": false,
+            "nodeId": "MQugrL9DhUxfHnpl6"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST",
+            "optionName": "KST E2510",
+            "hasUserCode": false,
+            "nodeId": "MbddbpCBtOG5zHBe+"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "SV2_4Fork",
+            "optionName": "SV2-4SFork",
+            "hasUserCode": false,
+            "nodeId": "MKAmrros8jCGlY9r5"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST_E7508",
+            "optionName": "KST E7508",
+            "hasUserCode": false,
+            "nodeId": "M95dF74KlBGar+Tfg"
+          }
+        }
+      ],
+      "namespace": "",
+      "defaultValue": "None",
+      "enumOptionVisibilityConditions": {
+        "type": 2936,
+        "typeName": "BTEnumOptionVisibilityConditionList",
+        "message": {
+          "visibilityConditions": []
+        }
+      },
+      "parameterId": "List_ySGuwLBMa9tVMz",
+      "parameterName": "Connector A",
+      "isCosmetic": false,
+      "visibilityCondition": {
+        "type": 177,
+        "typeName": "BTParameterVisibilityCondition",
+        "message": {}
+      },
+      "hasUserCode": false,
+      "nodeId": "MqKs0wjayJophJO8C"
+    }
+  },
+  {
+    "type": 105,
+    "typeName": "BTMConfigurationParameterEnum",
+    "message": {
+      "enumName": "List_3u8KU5jBjgEs71_conf",
+      "options": [
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Default",
+            "optionName": "RV2-6Ring",
+            "hasUserCode": false,
+            "nodeId": "M3U3/OJuWm+Y/bIxP"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "sv1_25_4Fork",
+            "optionName": "sv1.25-4Fork",
+            "hasUserCode": false,
+            "nodeId": "MggKTP4fukvxS1HqH"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_4_8Spade",
+            "optionName": "4.8Spade",
+            "hasUserCode": false,
+            "nodeId": "MaOLTX8uIyc5YRgmz"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "None",
+            "optionName": "None",
+            "hasUserCode": false,
+            "nodeId": "MSpQB9itbQ7aouWEA"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_6",
+            "optionName": "XHP-6",
+            "hasUserCode": false,
+            "nodeId": "M5zvkblEJmn97wnxp"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_4",
+            "optionName": "XHP-4",
+            "hasUserCode": false,
+            "nodeId": "MOy7Zt7nIMZnwmtPs"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHP_2",
+            "optionName": "XHP-2",
+            "hasUserCode": false,
+            "nodeId": "MrcO5Y7kjiwhdQMCj"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST_E1008",
+            "optionName": "KST E1008",
+            "hasUserCode": false,
+            "nodeId": "MpKZUD4Rj6WbwW/16"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "RJ45Male",
+            "optionName": "RJ45Male",
+            "hasUserCode": false,
+            "nodeId": "Mk7Vh29TFXFZ5Zpft"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "XHA_4",
+            "optionName": "XHA-4",
+            "hasUserCode": false,
+            "nodeId": "M8XvmEUPR1smlIEpE"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_6Spade",
+            "optionName": "6.3Spade",
+            "hasUserCode": false,
+            "nodeId": "M9skYEnRwVRsiDEEw"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST_E2510",
+            "optionName": "KST E2510",
+            "hasUserCode": false,
+            "nodeId": "Mqc6SsFeLyARtuLki"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "SV2_4Fork",
+            "optionName": "SV2-4SFork",
+            "hasUserCode": false,
+            "nodeId": "McU0XnBTRzxR7gcEF"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "KST_E7508",
+            "optionName": "KST E7508",
+            "hasUserCode": false,
+            "nodeId": "MzIJIOmqNP9GAzd/l"
+          }
+        }
+      ],
+      "namespace": "",
+      "defaultValue": "Default",
+      "enumOptionVisibilityConditions": {
+        "type": 2936,
+        "typeName": "BTEnumOptionVisibilityConditionList",
+        "message": {
+          "visibilityConditions": []
+        }
+      },
+      "parameterId": "List_3u8KU5jBjgEs71",
+      "parameterName": "Connector B",
+      "isCosmetic": false,
+      "visibilityCondition": {
+        "type": 177,
+        "typeName": "BTParameterVisibilityCondition",
+        "message": {}
+      },
+      "hasUserCode": false,
+      "nodeId": "M7R2N8JExu1rlurFA"
+    }
+  }
+]
