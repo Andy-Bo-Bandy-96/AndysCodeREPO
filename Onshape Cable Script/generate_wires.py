@@ -57,7 +57,7 @@ TEMPLATE_WID = os.getenv("TEMPLATE_WID", "").strip(' "\'\n\r')
 
 # ONSHAPE CORE METADATA PROPERTY IDs
 PART_NUMBER_PROPERTY_ID = "57f3fb8efa3416c06701d60f"
-NAME_PROPERTY_ID = "57f3fb8efa3416c06701d60e"
+NAME_PROPERTY_ID = "57f3fb8efa3416c06701d60d" # Explicitly targets the Element Name field
 TARGET_FOLDER_ID = "f83018d2440a03d57cf2ced3"
 
 auth = (access, secret)
@@ -89,20 +89,26 @@ final_df = pd.merge(merge_1, ref_df, left_on='ID', right_on='Wire ID', how='inne
 # EXACT 24-PART TRANSLATION DICTIONARY
 def map_connector(csv_val):
     val = str(csv_val).strip().lower()
+    
+    # 1. MOLEX Series
     if '0430200211' in val: return "_0430200211_Molex"
     if '0430200400' in val: return "_0430200400_Molex"
     if '0430250208' in val: return "_0430250208_Molex"
     if '0430250400' in val: return "_0430250400_Molex"
     if '0436450308' in val: return "Molex_0436450308"
     if '436400308' in val: return "Molex_436400308"
-    if 'xhp' in val or 'phr2.0' in val:
-        if '6' in val: return "XHP_6"
-        if '4' in val: return "XHP_4"
-        if '2' in val: return "XHP_2"
-    if 'xha' in val and '4' in val: return "XHA_4"
-    if 'phr' in val:
-        if '3' in val: return "JST_PHR_3"
-        if '2' in val: return "PHR_2"
+    
+    # 2. XH Series (Accounts for XH2.54 2P, XH2.54 4P, and PHR2.0-6P)
+    if 'xh2.54 4p' in val or 'xhp-4' in val or 'xhp 4' in val: return "XHP_4"
+    if 'xh2.54 2p' in val or 'xhp-2' in val or 'xhp 2' in val: return "XHP_2"
+    if 'phr2.0-6p' in val or 'xhp-6' in val or 'xhp 6' in val: return "XHP_6"
+    if 'xha-4' in val or 'xha 4' in val or 'xha4' in val: return "XHA_4"
+    
+    # 3. JST PHR
+    if 'phr-3' in val or 'phr 3' in val: return "JST_PHR_3"
+    if 'phr-2' in val or 'phr 2' in val and 'phr2.0' not in val: return "PHR_2"
+    
+    # 4. USB & HDMI
     if 'usb' in val:
         if 'c' in val: return "USB_C_Male"
         if 'female' in val: return "USBA_Female"
@@ -110,21 +116,31 @@ def map_connector(csv_val):
     if 'hdmi' in val:
         if 'micro' in val: return "MicroHDMI"
         return "HDMI"
+        
+    # 5. A1001H & RJ45
     if 'a1001h' in val: return "A1001H_05P_1"
     if 'rj45' in val: return "RJ45Male"
+
+    # 6. Spade Connectors
     if 'spade' in val:
-        if '6' in val: return "_6Spade"
+        if '6' in val: return "_6Spade" # Matches 6.3Spade
         return "_4_8Spade"
-    if '4.8' in val: return "_4_8Spade"
-    if '6.3' in val: return "_6Spade"
+    
+    # 7. KST Series (E1008, E2510, E7508)
     if 'kst' in val or '1008' in val or '2510' in val or '7508' in val:
         if '2510' in val: return "KST_E2510"
         if '7508' in val: return "KST_E7508"
         return "KST_E1008" 
+        
+    # 8. Fork Connectors (SV1 vs SV2)
     if 'fork' in val or 'sv1' in val or 'sv2' in val:
         if 'sv2' in val: return "SV2_4Fork"
         return "sv1_25_4Fork" 
+        
+    # 9. Ring Connectors
     if 'ring' in val or 'rv2' in val: return "Default"
+    
+    # 10. Blank/Catch-All
     return "None"
 
 # ==========================================
@@ -136,9 +152,11 @@ for index, row in final_df.iterrows():
     conn_a = row['Connector A']
     conn_b = row['Connector B']
     
-    # Safely extract Part Number and new Cable Description
+    # Safely extract Part Number and Cable Description
     csv_part_number = str(row.get('Part number', row.get('Onshape Part Number', ''))).strip()
     csv_cable_desc = str(row.get('Cable Description', 'Cable Assembly')).strip()
+    
+    # Fallback if the Cable Description column is accidentally left blank
     if csv_cable_desc.lower() in ['nan', 'none', '']:
         csv_cable_desc = 'Cable Assembly'
     
@@ -233,9 +251,9 @@ for index, row in final_df.iterrows():
         api_request('POST', drawing_modify_url, auth, headers={"Content-Type": "application/json"}, json_payload=drawing_payload)
 
     # --- F. Write Properties Metadata (Name & Part Number) ---
-    write_log(">> STEP 6: Pushing Assembly Name & Drawing Name Metadata...")
+    write_log(">> STEP 6: Natively Renaming Tabs & Pushing Metadata...")
     
-    # Push to Assembly
+    # Push the exact Cable Description as the official Name of the Assembly Tab
     asm_meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
     api_request('POST', asm_meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={
         "items": [{"href": asm_meta_url, "properties": [
@@ -244,7 +262,7 @@ for index, row in final_df.iterrows():
         ]}]
     })
     
-    # Push to 2D Drawing
+    # Push the exact Cable Description as the official Name of the 2D Drawing Tab
     if new_dwg_id:
         dwg_meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_dwg_id}"
         api_request('POST', dwg_meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={
