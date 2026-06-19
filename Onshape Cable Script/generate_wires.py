@@ -54,14 +54,17 @@ secret = os.getenv("ONSHAPE_SECRET_KEY", "").strip(' "\'\n\r')
 
 TEMPLATE_DID = os.getenv("TEMPLATE_DID", "").strip(' "\'\n\r')
 TEMPLATE_WID = os.getenv("TEMPLATE_WID", "").strip(' "\'\n\r')
+
+# ONSHAPE CORE METADATA PROPERTY IDs
 PART_NUMBER_PROPERTY_ID = "57f3fb8efa3416c06701d60f"
+NAME_PROPERTY_ID = "57f3fb8efa3416c06701d60e"
 TARGET_FOLDER_ID = "f83018d2440a03d57cf2ced3"
 
 auth = (access, secret)
 base = url.rstrip('/')
 
 # ==========================================
-# 3. DATA LOADING
+# 3. DATA LOADING & DB SANITIZATION
 # ==========================================
 try:
     bom_df = pd.read_csv('assembly_bom.csv').fillna('None')
@@ -71,11 +74,8 @@ except Exception as e:
     write_log(f"CRITICAL ERROR: Could not load CSV files. {e}")
     exit()
 
-bom_df.columns = bom_df.columns.str.strip()
-ps_df.columns = ps_df.columns.str.strip()
-ref_df.columns = ref_df.columns.str.strip()
-
 for df in [bom_df, ps_df, ref_df]:
+    df.columns = df.columns.str.strip()
     for col in df.columns:
         if df[col].dtype == object:
             df[col] = df[col].astype(str).str.strip()
@@ -86,42 +86,45 @@ ref_df['Connector B'] = ref_df['Connector B'].replace(['nan', 'None', ''], 'None
 merge_1 = pd.merge(ps_df, bom_df, left_on='ID', right_on='Name', how='inner')
 final_df = pd.merge(merge_1, ref_df, left_on='ID', right_on='Wire ID', how='inner')
 
-# EXACT 14-PART TRANSLATION DICTIONARY
+# EXACT 24-PART TRANSLATION DICTIONARY
 def map_connector(csv_val):
     val = str(csv_val).strip().lower()
-    
-    # 1. Spade Connectors (4.8 vs 6.3)
+    if '0430200211' in val: return "_0430200211_Molex"
+    if '0430200400' in val: return "_0430200400_Molex"
+    if '0430250208' in val: return "_0430250208_Molex"
+    if '0430250400' in val: return "_0430250400_Molex"
+    if '0436450308' in val: return "Molex_0436450308"
+    if '436400308' in val: return "Molex_436400308"
+    if 'xhp' in val or 'phr2.0' in val:
+        if '6' in val: return "XHP_6"
+        if '4' in val: return "XHP_4"
+        if '2' in val: return "XHP_2"
+    if 'xha' in val and '4' in val: return "XHA_4"
+    if 'phr' in val:
+        if '3' in val: return "JST_PHR_3"
+        if '2' in val: return "PHR_2"
+    if 'usb' in val:
+        if 'c' in val: return "USB_C_Male"
+        if 'female' in val: return "USBA_Female"
+        return "USB_A_Male"
+    if 'hdmi' in val:
+        if 'micro' in val: return "MicroHDMI"
+        return "HDMI"
+    if 'a1001h' in val: return "A1001H_05P_1"
+    if 'rj45' in val: return "RJ45Male"
     if 'spade' in val:
         if '6' in val: return "_6Spade"
         return "_4_8Spade"
     if '4.8' in val: return "_4_8Spade"
     if '6.3' in val: return "_6Spade"
-    
-    # 2. XH Series
-    if 'xhp' in val:
-        if '6' in val: return "XHP_6"
-        if '4' in val: return "XHP_4"
-        if '2' in val: return "XHP_2"
-    if 'xha' in val and '4' in val: return "XHA_4"
-    
-    # 3. RJ45
-    if 'rj45' in val or 'rj-45' in val: return "RJ45Male"
-    
-    # 4. KST Series (E1008, E2510, E7508)
     if 'kst' in val or '1008' in val or '2510' in val or '7508' in val:
         if '2510' in val: return "KST_E2510"
         if '7508' in val: return "KST_E7508"
-        return "KST_E1008" # Fallback to 1008
-        
-    # 5. Fork Connectors (SV1 vs SV2)
+        return "KST_E1008" 
     if 'fork' in val or 'sv1' in val or 'sv2' in val:
         if 'sv2' in val: return "SV2_4Fork"
-        return "sv1_25_4Fork" # Default to standard fork
-        
-    # 6. Ring Connectors
+        return "sv1_25_4Fork" 
     if 'ring' in val or 'rv2' in val: return "Default"
-    
-    # 7. Safety Catch-All
     return "None"
 
 # ==========================================
@@ -132,9 +135,15 @@ for index, row in final_df.iterrows():
     raw_length = str(row['Length']).strip()
     conn_a = row['Connector A']
     conn_b = row['Connector B']
-    csv_part_number = str(row['Part number']) 
     
-    custom_name = f"{wire_id} - ({conn_a} to {conn_b}) - {csv_part_number} - Cable Assembly"
+    # Safely extract Part Number and new Cable Description
+    csv_part_number = str(row.get('Part number', row.get('Onshape Part Number', ''))).strip()
+    csv_cable_desc = str(row.get('Cable Description', 'Cable Assembly')).strip()
+    if csv_cable_desc.lower() in ['nan', 'none', '']:
+        csv_cable_desc = 'Cable Assembly'
+    
+    # Generate the Document File Name
+    custom_name = f"{wire_id} - {csv_cable_desc} - ({conn_a} to {conn_b}) - {csv_part_number}"
     write_log(f"\n{'='*80}\nPROCESSING WIRE: {wire_id}\n{'='*80}")
     
     if not raw_length or raw_length.lower() == 'none' or raw_length == '':
@@ -172,7 +181,6 @@ for index, row in final_df.iterrows():
             elif 'drawing' in el_name or el_type == 'application': new_dwg_id = it.get('id')
 
     if not new_asm_id or not new_ps_id:
-        write_log(f"ABORTING {wire_id}: Missing Assembly or Part Studio.")
         continue
 
     # --- C. Update ASSEMBLY Schema Defaults ---
@@ -209,7 +217,6 @@ for index, row in final_df.iterrows():
     if new_dwg_id:
         write_log(">> STEP 5: Re-linking Drawing Views Locally...")
         drawing_modify_url = f"{base}/api/drawings/d/{new_did}/w/{new_wid}/e/{new_dwg_id}/modify"
-        
         drawing_payload = {
             "viewModifications": [
                 {
@@ -225,10 +232,27 @@ for index, row in final_df.iterrows():
         }
         api_request('POST', drawing_modify_url, auth, headers={"Content-Type": "application/json"}, json_payload=drawing_payload)
 
-    # --- F. Write Properties Metadata ---
-    write_log(">> STEP 6: Writing Metadata Properties...")
-    meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
-    api_request('POST', meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={"items": [{"href": meta_url, "properties": [{"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number}]}]})
+    # --- F. Write Properties Metadata (Name & Part Number) ---
+    write_log(">> STEP 6: Pushing Assembly Name & Drawing Name Metadata...")
+    
+    # Push to Assembly
+    asm_meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_asm_id}"
+    api_request('POST', asm_meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={
+        "items": [{"href": asm_meta_url, "properties": [
+            {"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number},
+            {"propertyId": NAME_PROPERTY_ID, "value": csv_cable_desc}
+        ]}]
+    })
+    
+    # Push to 2D Drawing
+    if new_dwg_id:
+        dwg_meta_url = f"{base}/api/metadata/d/{new_did}/w/{new_wid}/e/{new_dwg_id}"
+        api_request('POST', dwg_meta_url, auth, headers={"Content-Type": "application/json"}, json_payload={
+            "items": [{"href": dwg_meta_url, "properties": [
+                {"propertyId": PART_NUMBER_PROPERTY_ID, "value": csv_part_number},
+                {"propertyId": NAME_PROPERTY_ID, "value": csv_cable_desc}
+            ]}]
+        })
     
     # --- G. Build Direct Parameterized View URL ---
     config_url_string = f"AssyLength={clean_len}+mm;List_ySGuwLBMa9tVMz={mapped_conn_a};List_3u8KU5jBjgEs71={mapped_conn_b}"
