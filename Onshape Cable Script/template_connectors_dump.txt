@@ -105,7 +105,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_6",
-            "optionName": "XHP-6",
+            "optionName": "PHR2.0-6P",
             "hasUserCode": false,
             "nodeId": "MReu388rHaFFYM0RF"
           }
@@ -115,7 +115,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_4",
-            "optionName": "XHP-4",
+            "optionName": "XH2.54 4P",
             "hasUserCode": false,
             "nodeId": "M2FM+/qPTDXDTrFsC"
           }
@@ -125,7 +125,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_2",
-            "optionName": "XHP-2",
+            "optionName": "XH2.54 2P",
             "hasUserCode": false,
             "nodeId": "M1cTOfqZ1jCcx1Oaf"
           }
@@ -198,6 +198,146 @@
             "optionName": "KST E7508",
             "hasUserCode": false,
             "nodeId": "M95dF74KlBGar+Tfg"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430200211_Molex",
+            "optionName": "0430200211 Molex",
+            "hasUserCode": false,
+            "nodeId": "MK/Al75u8AbA9hznk"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430200400_Molex",
+            "optionName": "0430200400 Molex",
+            "hasUserCode": false,
+            "nodeId": "MN3JVJ/dG2sNO0rW2"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430250208_Molex",
+            "optionName": "0430250208 Molex",
+            "hasUserCode": false,
+            "nodeId": "MMRe1pzNmZJ5wOMtR"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430250400_Molex",
+            "optionName": "0430250400 Molex",
+            "hasUserCode": false,
+            "nodeId": "M288KMnYQGkaoYE7D"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "A1001H_05P_1",
+            "optionName": "A1001H-05P-1",
+            "hasUserCode": false,
+            "nodeId": "MYNayzkt7rn4gK7LL"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "HDMI",
+            "optionName": "HDMI",
+            "hasUserCode": false,
+            "nodeId": "MXd9uEMUk6q1Daty7"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "JST_PHR_3",
+            "optionName": "JST PHR-3",
+            "hasUserCode": false,
+            "nodeId": "MvDbbvVCcv4XzJjaL"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "MicroHDMI",
+            "optionName": "MicroHDMI",
+            "hasUserCode": false,
+            "nodeId": "M+Gz2Mg+1v4hM+ILh"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Molex_0436450308",
+            "optionName": "Molex 0436450308",
+            "hasUserCode": false,
+            "nodeId": "MuXuKvvwBfaAuCc9v"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Molex_436400308",
+            "optionName": "Molex 436400308",
+            "hasUserCode": false,
+            "nodeId": "M41Qdg2ADJjfSOOM6"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "PHR_2",
+            "optionName": "PHR-2",
+            "hasUserCode": false,
+            "nodeId": "M8nQEAZUFzGVIw9vz"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USB_A_Male",
+            "optionName": "USB A Male",
+            "hasUserCode": false,
+            "nodeId": "MmVF+++hwG1SdNAFy"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USB_C_Male",
+            "optionName": "USB C Male",
+            "hasUserCode": false,
+            "nodeId": "MhxfIAdyUc9+NvyFN"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USBA_Female",
+            "optionName": "USBA Female",
+            "hasUserCode": false,
+            "nodeId": "MttaPrtvyysNL3mD5"
           }
         }
       ],
@@ -273,7 +413,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_6",
-            "optionName": "XHP-6",
+            "optionName": "PHR2.0-6P",
             "hasUserCode": false,
             "nodeId": "M5zvkblEJmn97wnxp"
           }
@@ -283,7 +423,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_4",
-            "optionName": "XHP-4",
+            "optionName": "XH2.54 4P",
             "hasUserCode": false,
             "nodeId": "MOy7Zt7nIMZnwmtPs"
           }
@@ -293,7 +433,7 @@
           "typeName": "BTMEnumOption",
           "message": {
             "option": "XHP_2",
-            "optionName": "XHP-2",
+            "optionName": "XH2.54 2P",
             "hasUserCode": false,
             "nodeId": "MrcO5Y7kjiwhdQMCj"
           }
@@ -366,6 +506,146 @@
             "optionName": "KST E7508",
             "hasUserCode": false,
             "nodeId": "MzIJIOmqNP9GAzd/l"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430200211_Molex",
+            "optionName": "0430200211 Molex",
+            "hasUserCode": false,
+            "nodeId": "MhABhUrwBFuXRwLqB"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430200400_Molex",
+            "optionName": "0430200400 Molex",
+            "hasUserCode": false,
+            "nodeId": "Mx29Iy7d4oiXRiG9+"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430250208_Molex",
+            "optionName": "0430250208 Molex",
+            "hasUserCode": false,
+            "nodeId": "MUBRR0OgVjJeMJLNM"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "_0430250400_Molex",
+            "optionName": "0430250400 Molex",
+            "hasUserCode": false,
+            "nodeId": "MHbEy8q5D7LrAtNsC"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "A1001H_05P_1",
+            "optionName": "A1001H-05P-1",
+            "hasUserCode": false,
+            "nodeId": "MnoD623R+0TBJIEqv"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "HDMI",
+            "optionName": "HDMI",
+            "hasUserCode": false,
+            "nodeId": "MLK8EseAY15hpeeHH"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "JST_PHR_3",
+            "optionName": "JST PHR-3",
+            "hasUserCode": false,
+            "nodeId": "MqLa4ymcn/BwB/sz+"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "MicroHDMI",
+            "optionName": "MicroHDMI",
+            "hasUserCode": false,
+            "nodeId": "MseNiu3yp2mx1yxlA"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Molex_0436450308",
+            "optionName": "Molex 0436450308",
+            "hasUserCode": false,
+            "nodeId": "MSn+eqHoixF6Y0kbY"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "Molex_436400308",
+            "optionName": "Molex 436400308",
+            "hasUserCode": false,
+            "nodeId": "MnUWNpaapdYEULkhC"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "PHR_2",
+            "optionName": "PHR-2",
+            "hasUserCode": false,
+            "nodeId": "MFUS48YduGHJP4oQy"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USB_A_Male",
+            "optionName": "USB A Male",
+            "hasUserCode": false,
+            "nodeId": "MTJjvAmVvah5MewrL"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USB_C_Male",
+            "optionName": "USB C Male",
+            "hasUserCode": false,
+            "nodeId": "MC8gB4mBMp7Ne+O9S"
+          }
+        },
+        {
+          "type": 592,
+          "typeName": "BTMEnumOption",
+          "message": {
+            "option": "USBA_Female",
+            "optionName": "USBA Female",
+            "hasUserCode": false,
+            "nodeId": "M7Sm62NycbwsxNohr"
           }
         }
       ],
