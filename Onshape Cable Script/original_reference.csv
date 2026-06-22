@@ -1,12 +1,38 @@
-Wire ID ,From Ref ,From Pin ,To Ref ,To Pin ,Diameter ,Area ,Gauge ,Insulation ,Bend Radius ,Color ,Connector A ,Connector B ,Onshape Part Number,Old Part Number (for cross referencing) ,Onshape Length,Marlene Length,Drawing Length (Using the longer of the two listed adding 25mm for extra safety) (mm),Cable Description,Number of Conductors,Conductor Material,"Wire Pin Out
-Side A --- Side B","Label A 
-(R1 indicated Rev 1 of cable design) ","Label B
-",Voltage Rating,Current Rating,Special Note,Jacket / Insulation Specification,"Wire Print Legend. 
-To be printed on the outer jacket of each cable in contrasting readable text, resistant to cleaning chemincals ",Connector A Drawing Note,Connector B Drawing Note,Title Block Notes: 
-W001,SWITL,L,WAGOL1,L1,3,2.08,14,0.68,15,BLACK,4.8Spade,KST E2510,PRT-0085,100,121.746 mm,80mm,145,Line in,1,Tinned Copper,NA,0085 L R1,0085 LW R1,600V ,10A,,UL 1015 / 600V / 105°C,"XXXMFGXIDXX UL 1015, VW-1, UR CE RoHS, 600V, #14 AWG, TC, 105°C","Connector A: 4.8Spade (Quick connect Female Tab 0.8mm HX:HFDFN2-240 (Blue))
-Label A text: 0085 L R1
-Material Flammability: UL94 V-0
-Heat Shrink (if used): UL-recognized, rated 125°C, 600V, VW-1 compliant","Connector B: KST E2510
-Label B text: 0085 LW R1
-Material Flammability: UL94 V-0
-Heat Shrink (if used): UL-recognized, rated 125°C, 600V, VW-1 compliant",
+Wire ID ,From Ref ,From Pin ,To Ref ,To Pin ,Diameter ,Area ,Gauge ,Insulation ,Bend Radius ,Color ,Connector A ,Connector B ,Cable Description
+W001,SWITL,L,WAGOL1,L1,3,2.08,14,0.68,15,BLACK,4.8Spade,KST E2510,Line in
+W002,WAGOL2,L2,PSUL3,L3,3,2.08,14,0.68,15,BLACK,KST E2510,SV2-4SFork,Line to PSU
+W003,SWITN,N,WAGON1,N1,3,2.08,14,0.68,15,WHITE,4.8Spade,KST E2510,Neutral in 
+W004,WAGON2,N2,PSUN3,N3,3,2.08,14,0.68,15,WHITE,KST E2510,SV2-4SFork,Neutral to PSU
+W005,ACINLG,G,MAINPG1,G1,3,2.08,14,0.68,15,YELLOW/GREEN,4.8Spade,RV2-6,Main PE in
+W006,MAINPG2,G2,PSUG3,G3,3,2.08,14,0.68,15,YELLOW/GREEN,RV2-6,SV2-4SFork,PSU Ground
+W007,SECONG,G,LIDPEG,G,3,2.08,14,0.68,15,YELLOW/GREEN,RV2-6,RV2-6,Chassis ground
+W008,THIRDG,G,CORETG,G,3,2.08,14,0.68,15,YELLOW/GREEN,RV2-6,RV2-6,Printer core ground
+W009,RELAY2,2,SNAPDA,A,3,2.08,14,0.68,15,BLACK,SV2-4SFork,6.3Spade,Relay to Snap Disk Line
+W010,SNAPDB,B,HEATEL,L,3,2.08,14,0.68,15,BLACK,6.3Spade,SV2-4SFork,Snap disk to Heated bed Line 
+W011,WAGON3,N3,HEATEN,N,3,2.08,14,0.68,15,WHITE,KST E2510,SV2-4SFork,Neutral to Heated Bed Neutral 
+W012,WAGOL3,L3,RELAY1,1,3,2.08,14,0.68,15,BLACK,KST E2510,SV2-4SFork,Line to Relay
+W013,PSUL1,L1,MCBL,L,2,0.82,16,0.5,10,RED,sv1.25-4Fork,KST E1008,MCB 24V+
+W014,PSUN1,N1,MCBN,N,2,0.82,16,0.5,10,BLACK,sv1.25-4Fork,KST E1008,MCB 24V-
+W015,PSUL2,L2,COMPUL,L,2,0.82,16,0.5,10,RED,sv1.25-4Fork,KST E1008,Compute 24V+
+W016,PSUN2,N2,COMPUN,N,2,0.82,16,0.5,10,BLACK,sv1.25-4Fork,KST E1008,Compute 24V-
+W017,PERPSTATA,STATA1,INLSTATUA,INSTA,2,0.82,24,0.5,10,REDBLUEBLACK,JST PHR-3,Molex 436400308,Status Light A 
+W018,INLSTATB,INSTB,STATB,STATB1,2,0.82,24,0.5,10,REDBLUEBLACK,Molex 0436450308,None,Status Light B 
+W019,MCBHBL,L,RELAY3,3,2,0.82,18,0.5,10,RED,sv1.25-4Fork,KST E7508,Relay Control +ve
+W020,MCBHBN,N,RELAY4,4,2,0.82,18,0.5,10,BLACK,sv1.25-4Fork,KST E7508,Relay Control -Ve
+W021,ACINLL,L,SWITL1,L1,3,2.08,14,0.68,15,BLACK,4.8Spade,4.8Spade,Switch line 
+W022,ACINLN,N,SWITN1,N1,3,2.08,14,0.68,15,WHITE,4.8Spade,4.8Spade,Switch Neutral 
+W023,MCBTH,TH,HEATETH,TH,1.2,0.2,24,0.35,6,REDBLACK,XH2.54 2P,XH2.54 2P,Heated Bed Thermistor
+W024,MCBXMOT,XMOT,XMOTO1,1,1.2,0.2,24,0.35,6,BLUEREDGREENBLACK,XH2.54 4P,PHR2.0-6P,X motor
+W025,MCBYMOT,YMOT,YMOTO1,1,1.2,0.2,24,0.35,6,BLUEREDGREENBLACK,XH2.54 4P,PHR2.0-6P,Y motor 
+W027,MCBPH1,PH1,INLIN1,1,1.5,0.33,22,0.43,7.5,BLACK,XH2.54 4P,0430200400 Molex,PH A
+W028,INLIN2,2,PRINTP1,P1,1.5,0.33,22,0.43,7.5,BLACK,0430250400 Molex,XH2.54 4P,PH B (dynamic)
+W029,PERIPUSBA,USBA,SCREEUSBC,USBC,5,2.08,22,1,25,BLACK,USB A Male,USB C Male,Screen USB 
+W030,PERIPMICRO,MICRO,SCREEHDMI,HDMI,6,3,22,1,30,BLACK,MicroHDMI,HDMI,Screen HDMI
+W031,PERIPRJ45,RJ45,ENCLORJ45,RJ45,5.5,2.5,22,1,27.5,BLACK,RJ45Male,RJ45Male,Ethernet
+W032,PERIPUSBA2,USBA,ENCLOUSBA,USBA,5,2.08,22,1,25,BLACK,USB A Male,USBA Female,User USB
+W033,PERIPUSBA3,USBA,MCBUSBC,USBC,5,2.08,22,1,25,BLACK,USB A Male,USB C Male,Peripheral to MCB
+W034,MCBZMOT,ZMOT,ZMOTO1,1,1.2,0.2,24,0.35,6,BLACK,XH2.54 4P,PH2.0-6P,Z Motor 
+W035,CAMERAA,CAM,CAMINL,CAMINL1,5,2.08,28,0.35,10,BLACK,A1001H-05P-1,0430250400 Molex,Camera A
+W036,CAMERAB,INCLINC2,PERIPUSBA4,USBA,5,2.08,28,0.35,10,BLACK,0430200400 Molex,USB A Male,Camera B
+W037,CHAMBA,LITA,CHILINA,CHINA,5,2.08,28,0.35,10,REDBLACK,PHR-2,0430250208 Molex,Chamber Light A
+W038,CHILINB,CHINB,CHAMBB,LITB,5,2.08,28,0.35,10,REDBLACK,0430200211 Molex,None,Chamber light B
